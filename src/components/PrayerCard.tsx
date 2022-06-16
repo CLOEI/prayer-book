@@ -26,7 +26,9 @@ function PrayerCard({id, title, text}: Props) {
   return (
     <Box as="details" w="full">
       <Button as="summary" listStyleType="none" w="full" justifyContent="space-between" fontWeight="bold" fontSize="xl">
-        <Text>{title}</Text>
+        <Box w="full" overflow="hidden" pr="2" noOfLines={1}>
+          <Text noOfLines={1}>{title}</Text>
+        </Box>
         <IconButton onClick={onOpen} aria-label="Delete prayer" icon={<BsTrashFill/>} size="sm" colorScheme="red"/>
       </Button>
       <Box bg={bg} my="2" mx="4" p="1" rounded="sm">
