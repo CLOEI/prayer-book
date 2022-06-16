@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import {Box} from '@chakra-ui/react';
+import {motion, isValidMotionProp} from 'framer-motion';
+import {chakra} from '@chakra-ui/react';
 
 import {setDeferredPrompt} from '../redux/slice/PWASlice';
 
@@ -21,10 +22,30 @@ function Layout({children}: Props) {
 
 
   return (
-    <Box p="2">
+    <CustomBox variants={thisVariant} initial="initial" animate="animate" exit="exit" p="2">
       {children}
-    </Box>
+    </CustomBox>
   );
 }
+
+const CustomBox = chakra(motion.div, {
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === 'children',
+});
+
+const thisVariant = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: 'easeInOut',
+    },
+  },
+  exit: {
+    opacity: 0,
+  },
+};
 
 export default Layout;

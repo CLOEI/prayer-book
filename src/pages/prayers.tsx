@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Heading, HStack, IconButton, Input, Textarea, VStack, chakra} from '@chakra-ui/react';
-import {AiOutlineMenu, AiOutlinePlusCircle} from 'react-icons/ai';
+import React, {useEffect, useState, useRef} from 'react';
+import {Button, Heading, HStack, IconButton, Input, Textarea, VStack, chakra, Drawer, DrawerOverlay, DrawerCloseButton, DrawerContent, DrawerBody, useDisclosure, DrawerHeader, useColorMode} from '@chakra-ui/react';
+import {AiOutlineMenu, AiOutlinePlusCircle, AiFillHome} from 'react-icons/ai';
+import {BsMoonFill, BsSunFill} from 'react-icons/bs';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {nanoid} from 'nanoid';
@@ -14,8 +15,11 @@ import Layout from '../components/Layout';
 import type {AppDispatch} from '../redux/store';
 
 function Prayer() {
+  const {isOpen, onOpen, onClose} = useDisclosure();
+  const {colorMode, toggleColorMode} = useColorMode();
   const [title, setTitle] = useState('');
   const [addToggled, setAddToggled] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
   const prayers = useSelector(selectPrayers);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -59,7 +63,8 @@ function Prayer() {
     <Layout>
       <HStack justifyContent="space-between">
         <IconButton
-          onClick={gotoHome}
+          onClick={onOpen}
+          ref={btnRef}
           aria-label="Menu" icon={<AiOutlineMenu/>}/>
         <Heading as="h1">Prayer Book</Heading>
         <IconButton
@@ -86,9 +91,26 @@ function Prayer() {
           </chakra.form>
         )}
         {prayers.loading === false && prayers.data.map(({id, ...text}) => {
-          return <PrayerCard key={id} {...text}/>;
+          return <PrayerCard key={id} id={id} {...text}/>;
         })}
       </VStack>
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay/>
+        <DrawerContent>
+          <DrawerCloseButton/>
+          <DrawerHeader>Menu</DrawerHeader>
+          <DrawerBody experimental_spaceY={2}>
+            <Button onClick={gotoHome} w="full" leftIcon={<AiFillHome/>} justifyContent="flex-start">Home</Button>
+            <Button onClick={toggleColorMode} w="full" leftIcon={colorMode === 'light' ? <BsMoonFill/> : <BsSunFill/>} justifyContent="flex-start">Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
+            </Button>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Layout>
   );
 }
