@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Button, Heading, HStack, IconButton, Input, Textarea, VStack, chakra, Drawer, DrawerOverlay, DrawerCloseButton, DrawerContent, DrawerBody, useDisclosure, DrawerHeader, useColorMode} from '@chakra-ui/react';
 import {AiOutlineMenu, AiOutlinePlusCircle, AiFillHome} from 'react-icons/ai';
-import {BsMoonFill, BsSunFill} from 'react-icons/bs';
+import {BsMoonFill, BsSunFill, BsTrashFill} from 'react-icons/bs';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 import {nanoid} from 'nanoid';
@@ -13,9 +13,11 @@ import PrayerCard from '../components/PrayerCard';
 import Layout from '../components/Layout';
 
 import type {AppDispatch} from '../redux/store';
+import DeletePrayerAlert from '../components/DeletePrayerAlert';
 
 function Prayer() {
   const {isOpen, onOpen, onClose} = useDisclosure();
+  const {isOpen: isOpenAlert, onOpen: onOpenAlert, onClose: onCloseAlert} = useDisclosure();
   const {colorMode, toggleColorMode} = useColorMode();
   const [title, setTitle] = useState('');
   const [addToggled, setAddToggled] = useState(false);
@@ -78,13 +80,17 @@ function Prayer() {
             <Input
               name="title"
               onChange={titleOnChangeHandler}
-              placeholder="Title..." required/>
+              placeholder="Title..."
+              autoComplete='off'
+              required/>
             {title.length > 0 && (
               <HStack my={2} alignItems="flex-start">
                 <Textarea
                   name="text"
                   as={autosize} resize="none"
-                  placeholder="Prayer text..." required/>
+                  placeholder="Prayer text..."
+                  autoComplete='off'
+                  required/>
                 <Button type="submit" colorScheme="green">Add</Button>
               </HStack>
             )}
@@ -94,6 +100,7 @@ function Prayer() {
           return <PrayerCard key={id} id={id} {...text}/>;
         })}
       </VStack>
+      <DeletePrayerAlert isOpen={isOpenAlert} onClose={onCloseAlert} all={true}/>
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -108,6 +115,7 @@ function Prayer() {
             <Button onClick={gotoHome} w="full" leftIcon={<AiFillHome/>} justifyContent="flex-start">Home</Button>
             <Button onClick={toggleColorMode} w="full" leftIcon={colorMode === 'light' ? <BsMoonFill/> : <BsSunFill/>} justifyContent="flex-start">Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
             </Button>
+            <Button onClick={onOpenAlert} w="full" leftIcon={<BsTrashFill/>} justifyContent="flex-start" colorScheme="red">Delete all prayer</Button>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

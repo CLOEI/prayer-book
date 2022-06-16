@@ -7,6 +7,4 @@ export default {
   readData: (key: string): Promise<unknown[] | null> => {
     return localForage.getItem(key);
   },
-  removeData: (key: string) => localForage.removeItem(key),
-  clearData: () => localForage.clear(),
 };

@@ -21,6 +21,12 @@ export const deletePrayer = createAsyncThunk(
       return idb.writeData('prayers', data.filter((prayer) => (prayer as Prayer).id !== id));
     },
 );
+export const deleteAllPrayer = createAsyncThunk(
+    'prayer/deleteAllPrayer',
+    async () => {
+      return idb.writeData('prayers', []);
+    },
+);
 
 const initialState = {
   data: [] as Prayer[],
@@ -43,6 +49,9 @@ const prayerSlice = createSlice({
       state.data = action.payload as Prayer[];
     },
     [deletePrayer.fulfilled.type]: (state, action) => {
+      state.data = action.payload as Prayer[];
+    },
+    [deleteAllPrayer.fulfilled.type]: (state, action) => {
       state.data = action.payload as Prayer[];
     },
   },
