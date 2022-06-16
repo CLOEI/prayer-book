@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, Heading, HStack, IconButton, Input, Textarea, VStack} from '@chakra-ui/react';
+import {Button, Heading, HStack, IconButton, Input, Textarea, VStack, chakra} from '@chakra-ui/react';
+import {AiOutlineMenu, AiOutlinePlusCircle} from 'react-icons/ai';
 import {useSelector, useDispatch} from 'react-redux';
-import autosize from 'react-textarea-autosize';
 import {useNavigate} from 'react-router-dom';
 import {nanoid} from 'nanoid';
+import autosize from 'react-textarea-autosize';
 
 import {selectPrayers} from '../redux/store';
 import {getPrayers, addPrayer} from '../redux/slice/prayerSlice';
@@ -11,7 +12,6 @@ import PrayerCard from '../components/PrayerCard';
 import Layout from '../components/Layout';
 
 import type {AppDispatch} from '../redux/store';
-import {AiOutlineMenu, AiOutlinePlusCircle} from 'react-icons/ai';
 
 function Prayer() {
   const [title, setTitle] = useState('');
@@ -45,8 +45,7 @@ function Prayer() {
     setTitle(e.target.value);
   };
 
-  const formSubmitHandler = (e: (React.FormEvent<HTMLDivElement> & React.FormEvent<HTMLFormElement>),
-  ) => {
+  const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const title = (e.target as any).title as HTMLInputElement;
     const text = (e.target as any).text as HTMLTextAreaElement;
@@ -69,7 +68,7 @@ function Prayer() {
       </HStack>
       <VStack my="6">
         {addToggled && (
-          <Box as="form" onSubmit={formSubmitHandler}
+          <chakra.form onSubmit={formSubmitHandler}
             w="full">
             <Input
               name="title"
@@ -84,7 +83,7 @@ function Prayer() {
                 <Button type="submit" colorScheme="green">Add</Button>
               </HStack>
             )}
-          </Box>
+          </chakra.form>
         )}
         {prayers.loading === false && prayers.data.map(({id, ...text}) => {
           return <PrayerCard key={id} {...text}/>;
